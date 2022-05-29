@@ -1,0 +1,338 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mft-conf
+  namespace: mq
+data: 
+  qmgr-security.mqsc: |
+    ALTER QMGR CHLAUTH(DISABLED)
+    ALTER AUTHINFO(SYSTEM.DEFAULT.AUTHINFO.IDPWOS) +
+      AUTHTYPE(IDPWOS) +
+      CHCKLOCL(optional) CHCKCLNT(optional)
+    REFRESH SECURITY TYPE(connauth)   
+  demo-objects.mqsc: |
+    DEFINE CHL (DEV.APP.SVRCONN) CHLTYPE (SVRCONN)
+  coordination-qm-setup.mqsc: |
+    DEFINE TOPIC('SYSTEM.FTE') TOPICSTR('SYSTEM.FTE') REPLACE
+    ALTER TOPIC('SYSTEM.FTE') NPMSGDLV(ALLAVAIL) PMSGDLV(ALLAVAIL)
+    DEFINE QLOCAL(SYSTEM.FTE) LIKE(SYSTEM.BROKER.DEFAULT.STREAM) REPLACE
+    ALTER QLOCAL(SYSTEM.FTE) DESCR('Stream for MQMFT Pub/Sub interface')
+    DISPLAY NAMELIST(SYSTEM.QPUBSUB.QUEUE.NAMELIST)
+    ALTER NAMELIST(SYSTEM.QPUBSUB.QUEUE.NAMELIST) +
+      NAMES(SYSTEM.BROKER.DEFAULT.STREAM,SYSTEM.BROKER.ADMIN.STREAM,SYSTEM.FTE)
+    DISPLAY QMGR PSMODE
+    ALTER QMGR PSMODE(ENABLED)
+  source-agent.mqsc: |
+    DEFINE QLOCAL(SYSTEM.FTE.COMMAND.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.DATA.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.REPLY.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.STATE.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.EVENT.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHAGT1.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHTRN1.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHOPS1.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHSCH1.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHMON1.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHADM1.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.HA.SRCAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+  dest-agent.mqsc: |
+    DEFINE QLOCAL(SYSTEM.FTE.COMMAND.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.DATA.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.REPLY.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.STATE.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.EVENT.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(5000) +
+        MAXMSGL(4194304) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHAGT1.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHTRN1.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHOPS1.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHSCH1.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHMON1.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.AUTHADM1.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE
+    DEFINE QLOCAL(SYSTEM.FTE.HA.DESTAGENT) +
+        DEFPRTY(0) +
+        DEFSOPT(SHARED) +
+        GET(ENABLED) +
+        MAXDEPTH(0) +
+        MAXMSGL(0) +
+        MSGDLVSQ(PRIORITY) +
+        PUT(ENABLED) +
+        RETINTVL(999999999) +
+        SHARE +
+        NOTRIGGER +
+        USAGE(NORMAL) +
+        REPLACE

@@ -1,0 +1,52 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: mft-agent-conf
+  namespace: mq
+data:
+  mqmftcfg.json: |
+    {
+      "waitTimeToStart":20,
+      "coordinationQMgr":{
+        "name":"MQMFT",
+        "host":"mft-ibm-mq.mq.svc.cluster.local",
+        "port":1414,
+        "channel":"DEV.APP.SVRCONN",
+        "additionalProperties":{}
+      },
+      "commandQMgr":{
+        "name":"MQMFT",
+        "host":" mft-ibm-mq.mq.svc.cluster.local",
+        "port":1414,
+        "channel":"DEV.APP.SVRCONN",
+        "additionalProperties": {}
+      },
+      "agents":[
+        {
+          "name":"SRCAGENT",
+          "deleteOnTermination":"true",
+          "type":"STANDARD",
+          "qmgrName":"MQMFT",
+          "qmgrHost":"mft-ibm-mq.mq.svc.cluster.local",
+          "qmgrPort":1414,
+          "qmgrChannel":"DEV.APP.SVRCONN",
+          "additionalProperties":{
+            "enableQueueInputOutput":"true",     
+            "logCapture":"true"
+          }
+        },{
+          "name":"DESTAGENT",
+          "type":"STANDARD",    
+          "deleteOnTermination":"true",
+          "cleanOnStart":"all",    
+          "qmgrName":"MQMFT",
+          "qmgrHost":"mft-ibm-mq.mq.svc.cluster.local",
+          "qmgrPort":1414,
+          "qmgrChannel":"DEV.APP.SVRCONN",
+          "additionalProperties":{
+            "logCapture":"true",
+            "enableQueueInputOutput":"false"
+          } 
+        }
+      ]
+    }

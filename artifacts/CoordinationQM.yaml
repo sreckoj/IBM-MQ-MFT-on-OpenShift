@@ -1,0 +1,40 @@
+apiVersion: mq.ibm.com/v1beta1
+kind: QueueManager
+metadata:
+  name: mft
+  namespace: mq
+spec:
+  license:
+    accept: false
+    license: L-RJON-C7QG3S
+    use: NonProduction
+  queueManager:
+    name: MQMFT
+    mqsc:
+      - configMap:
+          name: mft-conf
+          items:
+            - qmgr-security.mqsc
+            - demo-objects.mqsc
+            - coordination-qm-setup.mqsc
+            - source-agent.mqsc
+            - dest-agent.mqsc
+    resources:
+      limits:
+        cpu: 500m
+      requests:
+        cpu: 500m
+    storage:
+      queueManager:
+        type: persistent-claim
+      defaultClass: managed-nfs-storage
+  template:
+    pod:
+      containers:
+        - env:
+            - name: MQSNOAUT
+              value: 'yes'
+          name: qmgr
+  version: 9.2.5.0-r1
+  web:
+    enabled: true
