@@ -69,12 +69,14 @@ oc apply -f CoordinationQM-conf.yaml
 Agents' configuration is defined in JSON format. In our case, we will store it again in the Kubernetes Config Map object. In this example, we are running the agents in the same OpenShift cluster as the queue manager and therefore we can use an internal queue manager URL:
 
 ```json
-  ...
+  //...
+
   "qmgrName":"MQMFT",
   "qmgrHost":"mft-ibm-mq.mq.svc.cluster.local",
   "qmgrPort":1414,
   "qmgrChannel":"DEV.APP.SVRCONN",
-  ...
+  
+  //...
 ```
 
 Please change the host, port, queue manager name, and channel to fit your environment.
